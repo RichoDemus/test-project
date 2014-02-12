@@ -6,7 +6,7 @@ class MagicMashShuffle
 	{
 		Deck deck = new Deck(100);
 
-		deck.doCommanderRiffle(1);
+		deck.doCommanderMashShuffle(1);
 
 		int howManyCardsInOriginalPosition = deck.getCardsInOriginalPosition();
 

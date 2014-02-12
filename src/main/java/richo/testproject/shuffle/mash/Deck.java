@@ -15,7 +15,7 @@ class Deck
 	Deck(int size)
 	{
 		cards = new ArrayList<>();
-		for(int i = 0; i < cards.size(); i++)
+		for(int i = 0; i < size; i++)
 		{
 			cards.add(new Card(i));
 		}
@@ -34,18 +34,21 @@ class Deck
 		return count;
 	}
 
-	public void doCommanderRiffle(int amount)
+	public void doCommanderMashShuffle(int amount)
 	{
 		for(int i = 0; i < amount; i++)
 		{
-			doOneCommanderRiffleShuffle();
+			doOneCommanderMashShuffle();
 		}
 	}
 
-	private void doOneCommanderRiffleShuffle()
+	private void doOneCommanderMashShuffle()
 	{
 		List<Card> leftHand = cards.subList(0, LEFT_HAND_SIZE);
 		cards.removeAll(leftHand);
+
+		int numberOfCardsToInsert = 2;
+		List<Card> cardsToInsert = leftHand.subList(leftHand.size()-numberOfCardsToInsert, leftHand.size());
 
 	}
 }
