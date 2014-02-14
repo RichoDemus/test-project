@@ -35,4 +35,10 @@ class Card
 	{
 		return index;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Card[" + index + "]";
+	}
 }
