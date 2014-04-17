@@ -15,7 +15,7 @@ class Deck
 	Deck(int size)
 	{
 		cards = new ArrayList<>();
-		for(int i = 0; i < size; i++)
+		for (int i = 0; i < size; i++)
 		{
 			cards.add(new Card(i));
 		}
@@ -24,9 +24,9 @@ class Deck
 	int getCardsInOriginalPosition()
 	{
 		int count = 0;
-		for(int i = 0; i < cards.size(); i++)
+		for (int i = 0; i < cards.size(); i++)
 		{
-			if(cards.get(i).getIndex() == i)
+			if (cards.get(i).getIndex() == i)
 			{
 				count++;
 			}
@@ -36,7 +36,7 @@ class Deck
 
 	public void doCommanderMashShuffle(int amount)
 	{
-		for(int i = 0; i < amount; i++)
+		for (int i = 0; i < amount; i++)
 		{
 			doOneCommanderMashShuffle();
 		}
@@ -48,7 +48,7 @@ class Deck
 
 		int indexFromRightToInsertInto = 0;
 
-		while(CollectionUtils.isNotEmpty(leftHand))
+		while (CollectionUtils.isNotEmpty(leftHand))
 		{
 			int numberOfCardsToTakeFromLeftHand = getNumberOfCardsToTakeFromLeftHand(leftHand);
 
@@ -66,8 +66,10 @@ class Deck
 	private int getNumberOfCardsToTakeFromLeftHand(List<Card> leftHand)
 	{
 		int number = rand.nextInt(4);
-		if(number > leftHand.size())
+		if (number > leftHand.size())
+		{
 			return leftHand.size();
+		}
 		return number;
 	}
 
@@ -80,7 +82,7 @@ class Deck
 	{
 		int cardstoTake = 10 + rand.nextInt(20);
 		List<Card> result = new ArrayList<>();
-		for(int i = 0; i < cardstoTake; i++)
+		for (int i = 0; i < cardstoTake; i++)
 		{
 			result.add(cards.remove(0));
 		}
@@ -91,7 +93,7 @@ class Deck
 	private List<Card> takeCardsFromLeftHandToInsert(List<Card> leftHand, int numberOfCardsToTakeFromLeftHand)
 	{
 		List<Card> result = new ArrayList<>();
-		for(int i = 0; i < numberOfCardsToTakeFromLeftHand; i++)
+		for (int i = 0; i < numberOfCardsToTakeFromLeftHand; i++)
 		{
 			result.add(leftHand.remove(leftHand.size() - 1));
 		}
@@ -146,7 +148,7 @@ class Deck
 		}
 
 		System.out.println("Result:");
-		for(Integer key : mapOfRanges.keySet())
+		for (Integer key : mapOfRanges.keySet())
 		{
 			System.out.println("there are " + mapOfRanges.get(key) + " ranges that are " + key + " long");
 		}

@@ -18,11 +18,11 @@ public class QuickSort
 
 	public int[] sort()
 	{
-		for(int i = 0; i < array.length -1; i++)
+		for (int i = 0; i < array.length - 1; i++)
 		{
-			for(int j = i+1; j < array.length; j++)
+			for (int j = i + 1; j < array.length; j++)
 			{
-				if(array[i] > array[j])
+				if (array[i] > array[j])
 				{
 					swap(i, j);
 				}

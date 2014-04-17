@@ -9,14 +9,14 @@ package richo.testproject;
  */
 public class PergMenReproduce
 {
-		public static void main(String[] args) throws InterruptedException
-		{
-			Thread.sleep(20 * 1000);
-			recurse(new String[]{"whatever"});
-		}
+	public static void main(String[] args) throws InterruptedException
+	{
+		Thread.sleep(20 * 1000);
+		recurse(new String[]{"whatever"});
+	}
 
-		private static void recurse(String[] args)
-		{
-			recurse(new String[] { (args[0] + args[0]).intern() });
-		}
+	private static void recurse(String[] args)
+	{
+		recurse(new String[]{(args[0] + args[0]).intern()});
+	}
 }

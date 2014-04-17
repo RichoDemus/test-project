@@ -41,7 +41,7 @@ public class Lambdastuff
 
 		list.forEach(System.out::print);
 
-		List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5 ,6 ,7);
+		List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
 
 		pr.doPrint("\n");
 
@@ -78,6 +78,7 @@ public class Lambdastuff
 
 	/**
 	 * prints the number
+	 *
 	 * @param integer int to print
 	 */
 	private static void printNumber(Integer integer)
@@ -99,9 +100,9 @@ public class Lambdastuff
 
 	private static Integer getFirstMathcing(Collection<Integer> list, Predicate<Integer> predicate)
 	{
-		for(Integer i : list)
+		for (Integer i : list)
 		{
-			if(predicate.test(i))
+			if (predicate.test(i))
 			{
 				return i;
 			}

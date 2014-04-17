@@ -13,12 +13,13 @@ import java.util.Random;
 public class BogoSorter
 {
 	private static Random r = new Random();
+
 	public static void main(String[] args)
 	{
 		//int[] array = new int[]{5,7,4,7,9,7,5,4,3,2,34,6,7,8,6,5,3,4,5,76,46,45};
-		int[] array = new int[]{5,7,4,45,100,7,-10,1337};
+		int[] array = new int[]{5, 7, 4, 45, 100, 7, -10, 1337};
 
-		while(!isSorted(array))
+		while (!isSorted(array))
 		{
 			array = shuffle(array);
 			System.out.println(Arrays.toString(array));
@@ -28,7 +29,7 @@ public class BogoSorter
 
 	private static int[] shuffle(int[] array)
 	{
-		for(int i = 0; i < array.length; i++)
+		for (int i = 0; i < array.length; i++)
 		{
 			array = swapBits(array, r.nextInt(array.length), r.nextInt(array.length));
 		}
@@ -45,9 +46,9 @@ public class BogoSorter
 
 	public static boolean isSorted(int[] integers)
 	{
-		for(int i = 0; i < integers.length - 1; i++)
+		for (int i = 0; i < integers.length - 1; i++)
 		{
-			if(integers[i] > integers[ i + 1 ])
+			if (integers[i] > integers[i + 1])
 			{
 				return false;
 			}

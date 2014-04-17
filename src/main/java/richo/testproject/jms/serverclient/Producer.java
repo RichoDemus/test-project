@@ -3,7 +3,6 @@ package richo.testproject.jms.serverclient;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
-import java.io.IOError;
 import java.io.IOException;
 
 /**
@@ -49,7 +48,7 @@ public class Producer implements ExceptionListener
 
 		connection.setExceptionListener(this);
 
-				// Create the destination (Topic or Queue)
+		// Create the destination (Topic or Queue)
 		Destination destination = session.createQueue(Consumer.QUEUE_NAME);
 
 		// Create a MessageProducer from the Session to the Topic or Queue
@@ -58,14 +57,15 @@ public class Producer implements ExceptionListener
 
 		TextMessage message = session.createTextMessage("Hello world!");
 
- 		 // Tell the producer to send the message
-  		producer.send(message, DeliveryMode.NON_PERSISTENT, 4, 10000);
+		// Tell the producer to send the message
+		producer.send(message, DeliveryMode.NON_PERSISTENT, 4, 10000);
 
 		session.close();
 		connection.close();
 	}
 
-	public synchronized void onException(JMSException ex) {
+	public synchronized void onException(JMSException ex)
+	{
 		System.out.println("JMS Exception occured.  Shutting down client.");
 	}
 }

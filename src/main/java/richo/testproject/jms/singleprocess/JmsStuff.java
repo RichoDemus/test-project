@@ -39,21 +39,21 @@ public class JmsStuff
 
 		timer.scheduleAtFixedRate(new InfoTask(), 0, 1, TimeUnit.SECONDS);
 
-		for(int i = 0; i < numberOfSenders; i++)
+		for (int i = 0; i < numberOfSenders; i++)
 		{
-			executor.execute(new JMSMessageProducer("Hello World!", numberOfMessagesToSend/numberOfSenders));
+			executor.execute(new JMSMessageProducer("Hello World!", numberOfMessagesToSend / numberOfSenders));
 		}
 
 		executor.execute(consumer);
 
 		System.out.println("Waiting for all messages to be sent");
-		while(Counters.numberOfSentMessages.get() < numberOfMessagesToSend)
+		while (Counters.numberOfSentMessages.get() < numberOfMessagesToSend)
 		{
 			Thread.sleep(100);
 		}
 		stopwatch.split();
 		System.out.println("Waiting for all messags to be received");
-		while(Counters.numberOfSentMessages.get() > Counters.numberOfReceivedMessages.get())
+		while (Counters.numberOfSentMessages.get() > Counters.numberOfReceivedMessages.get())
 		{
 			Thread.sleep(100);
 		}

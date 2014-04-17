@@ -1,6 +1,5 @@
 package richo.testproject.jms.serverclient;
 
-import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerService;
 
@@ -65,40 +64,44 @@ public class Consumer implements ExceptionListener
 		// Create a MessageConsumer from the Session to the Topic or Queue
 		consumer = session.createConsumer(destination);
 		running = true;
-					// Wait for a message
-			while(running)
+		// Wait for a message
+		while (running)
+		{
+			System.out.println("Listening for a message");
+			Message message = consumer.receive(5000);
+
+			if (message == null)
 			{
-				System.out.println("Listening for a message");
-				Message message = consumer.receive(5000);
-
-				if(message == null)
-				{
-					System.out.println("Did not receive a message, waiting for a new one");
-					continue;
-				}
-
-
-				if (message instanceof TextMessage) {
-					TextMessage textMessage = (TextMessage) message;
-					String text = textMessage.getText();
-					System.out.println("Received: " + text);
-					if(text.startsWith(Consumer.KEYWORD_SHUTDOWN))
-					{
-						System.out.println("Received shutdown, shutting down");
-						running = false;
-					}
-				} else {
-					System.out.println("Received: " + message);
-				}
-
+				System.out.println("Did not receive a message, waiting for a new one");
+				continue;
 			}
+
+
+			if (message instanceof TextMessage)
+			{
+				TextMessage textMessage = (TextMessage) message;
+				String text = textMessage.getText();
+				System.out.println("Received: " + text);
+				if (text.startsWith(Consumer.KEYWORD_SHUTDOWN))
+				{
+					System.out.println("Received shutdown, shutting down");
+					running = false;
+				}
+			}
+			else
+			{
+				System.out.println("Received: " + message);
+			}
+
+		}
 
 		// Clean up
 		session.close();
 		connection.close();
 	}
 
-	public synchronized void onException(JMSException ex) {
+	public synchronized void onException(JMSException ex)
+	{
 		System.out.println("JMS Exception occured.  Shutting down client.");
 	}
 }

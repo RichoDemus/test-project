@@ -15,8 +15,8 @@ public class QuickSortTest
 	@Test
 	public void testSortTenNumbers() throws Exception
 	{
-		int[] expected = new int[]{1,2,3,3,6,8};
-		int[] result = new QuickSort(new int[]{1,3,3,2,8,6}).sort();
+		int[] expected = new int[]{1, 2, 3, 3, 6, 8};
+		int[] result = new QuickSort(new int[]{1, 3, 3, 2, 8, 6}).sort();
 
 		Assert.assertNotNull(result);
 		Assert.assertArrayEquals(expected, result);

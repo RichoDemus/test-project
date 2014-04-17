@@ -10,13 +10,14 @@ package richo.testproject;
 public class Progress
 {
 	private static final int NUMBER_OF_MESSAGES_TO_SEND = 1000;
+
 	public static void main(String[] args)
 	{
-		for(int i = 0; i < NUMBER_OF_MESSAGES_TO_SEND; i++)
+		for (int i = 0; i < NUMBER_OF_MESSAGES_TO_SEND; i++)
 		{
-			float percentage = ((float)i/(float)NUMBER_OF_MESSAGES_TO_SEND)*100;
+			float percentage = ((float) i / (float) NUMBER_OF_MESSAGES_TO_SEND) * 100;
 			//System.out.println("perc:" + percentage);
-			if(percentage % 10 == 0)
+			if (percentage % 10 == 0)
 			{
 				System.out.println("ASDASDASDASDASDASD: " + i);
 			}

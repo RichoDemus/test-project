@@ -19,7 +19,7 @@ public class InfoTask extends AbstractJMSInteracter implements Runnable
 
 			Enumeration enumeration = browser.getEnumeration();
 			int numberOfMessages = 0;
-			while(enumeration.hasMoreElements())
+			while (enumeration.hasMoreElements())
 			{
 				enumeration.nextElement();
 				numberOfMessages++;
@@ -35,7 +35,7 @@ public class InfoTask extends AbstractJMSInteracter implements Runnable
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}

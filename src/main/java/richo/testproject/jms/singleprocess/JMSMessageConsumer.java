@@ -25,21 +25,23 @@ public class JMSMessageConsumer extends AbstractJMSInteracter implements Runnabl
 
 
 	@Override
-	public void run() {
+	public void run()
+	{
 		running = true;
 
-		try {
+		try
+		{
 			connect();
 
 
 			// Wait for a message
-			while(running)
+			while (running)
 			{
 				//System.out.println("Listening for a message");
 				Counters.numberOfReceives.incrementAndGet();
 				Message message = consumer.receive(1000);
 
-				if(message == null)
+				if (message == null)
 				{
 					//System.out.println("Did not receive a message, waiting for a new one");
 					continue;
@@ -47,23 +49,28 @@ public class JMSMessageConsumer extends AbstractJMSInteracter implements Runnabl
 
 				Counters.numberOfReceivedMessages.incrementAndGet();
 
-				if (message instanceof TextMessage) {
+				if (message instanceof TextMessage)
+				{
 					TextMessage textMessage = (TextMessage) message;
 					String text = textMessage.getText();
 					//System.out.println("Received: " + text);
-					if(text.startsWith(JMSMessageConsumer.KEYWORD_SHUTDOWN))
+					if (text.startsWith(JMSMessageConsumer.KEYWORD_SHUTDOWN))
 					{
 						System.out.println("Received shutdown, shutting down");
 						running = false;
 					}
-				} else {
+				}
+				else
+				{
 					//System.out.println("Received: " + message);
 				}
 
 			}
 
 			disconnect();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			System.out.println("Caught: " + e);
 			e.printStackTrace();
 		}
@@ -91,7 +98,8 @@ public class JMSMessageConsumer extends AbstractJMSInteracter implements Runnabl
 		consumer.close();
 	}
 
-	public synchronized void onException(JMSException ex) {
+	public synchronized void onException(JMSException ex)
+	{
 		System.out.println("JMS Exception occured.  Shutting down client.");
 	}
 }

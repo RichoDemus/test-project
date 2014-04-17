@@ -15,7 +15,7 @@ class AbstractJMSInteracter
 	protected Session session;
 	protected Connection connection;
 
-	protected void connect()  throws JMSException
+	protected void connect() throws JMSException
 	{
 		// Create a ConnectionFactory
 		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("vm://localhost");

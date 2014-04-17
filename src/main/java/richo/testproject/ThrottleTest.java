@@ -19,14 +19,14 @@ public class ThrottleTest
 		long requestsSent = 0;
 		StopWatch watch = new StopWatch();
 		watch.start();
-		for(;requestsSent < TOTAL_REQUESTS; requestsSent++)
+		for (; requestsSent < TOTAL_REQUESTS; requestsSent++)
 		{
 			rateLimiter.acquire();
 		}
 		watch.stop();
 		double requests = requestsSent;
-		double timeInSeconds = watch.getTime()/1000;
-		System.out.println("Sent " + requestsSent + " in " + watch.toString() + " which is " + requests/timeInSeconds + " requests per second");
+		double timeInSeconds = watch.getTime() / 1000;
+		System.out.println("Sent " + requestsSent + " in " + watch.toString() + " which is " + requests / timeInSeconds + " requests per second");
 		System.out.println(timeInSeconds);
 	}
 }

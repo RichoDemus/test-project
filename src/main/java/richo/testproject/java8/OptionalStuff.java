@@ -2,10 +2,6 @@ package richo.testproject.java8;
 
 
 import java.util.Optional;
-import java.util.Set;
-import java.util.function.Supplier;
-import javax.validation.*;
-import javax.validation.constraints.NotNull;
 
 /**
  * Created by Richo on 2014-04-03.

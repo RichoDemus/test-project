@@ -37,30 +37,33 @@ public class JMSMessageProducer extends AbstractJMSInteracter implements Runnabl
 
 
 	@Override
-	public void run() {
-     try {
-		 connect();
+	public void run()
+	{
+		try
+		{
+			connect();
 
-         //System.out.println("Sent message: ["+ message.getText() + "] : " + Thread.currentThread().getName());
-	     for(int i = 0; i < numberOfMessagesToSend; i++)
-	     {
-		     // Create a messages
-		     TextMessage message = session.createTextMessage(msg + ": " + i);
+			//System.out.println("Sent message: ["+ message.getText() + "] : " + Thread.currentThread().getName());
+			for (int i = 0; i < numberOfMessagesToSend; i++)
+			{
+				// Create a messages
+				TextMessage message = session.createTextMessage(msg + ": " + i);
 
-		     // Tell the producer to send the message
-		     producer.send(message, DeliveryMode.NON_PERSISTENT, 4, 10000);
-		     Counters.numberOfSentMessages.incrementAndGet();
-	     }
+				// Tell the producer to send the message
+				producer.send(message, DeliveryMode.NON_PERSISTENT, 4, 10000);
+				Counters.numberOfSentMessages.incrementAndGet();
+			}
 
-		 disconnect();
+			disconnect();
 
 
-	 }
-     catch (Exception e) {
-         System.out.println("Caught: " + e);
-         e.printStackTrace();
-     }
- }
+		}
+		catch (Exception e)
+		{
+			System.out.println("Caught: " + e);
+			e.printStackTrace();
+		}
+	}
 
 	protected void connect() throws JMSException
 	{
