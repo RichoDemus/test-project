@@ -1,4 +1,4 @@
-package richo.testproject.jms;
+package richo.testproject.jms.singleprocess;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.commons.lang.time.StopWatch;
@@ -32,7 +32,7 @@ public class JmsStuff
 	{
 		final StopWatch stopwatch = new StopWatch();
 		stopwatch.start();
-		final int numberOfMessagesToSend = 300000;
+		final int numberOfMessagesToSend = 1000000;
 		final int numberOfSenders = 1;
 		System.out.println("Start sending " + numberOfMessagesToSend + " messages");
 		final JMSMessageConsumer consumer = new JMSMessageConsumer();

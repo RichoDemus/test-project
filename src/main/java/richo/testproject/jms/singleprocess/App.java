@@ -1,4 +1,4 @@
-package richo.testproject.jms;
+package richo.testproject.jms.singleprocess;
  
 import org.apache.activemq.ActiveMQConnectionFactory;
 

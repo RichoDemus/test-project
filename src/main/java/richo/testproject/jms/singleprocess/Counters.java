@@ -1,4 +1,4 @@
-package richo.testproject.jms;
+package richo.testproject.jms.singleprocess;
 
 import java.util.concurrent.atomic.AtomicLong;
 
