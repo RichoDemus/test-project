@@ -48,7 +48,7 @@ public class JMSMessageProducer extends AbstractJMSInteracter implements Runnabl
 		     TextMessage message = session.createTextMessage(msg + ": " + i);
 
 		     // Tell the producer to send the message
-		     producer.send(message);
+		     producer.send(message, DeliveryMode.NON_PERSISTENT, 4, 10000);
 		     Counters.numberOfSentMessages.incrementAndGet();
 	     }
 
@@ -67,7 +67,7 @@ public class JMSMessageProducer extends AbstractJMSInteracter implements Runnabl
 		super.connect();
 
 		// Create the destination (Topic or Queue)
-		Destination destination = session.createQueue("TEST.FOO");
+		Destination destination = session.createQueue(QUEUE_NAME);
 
 		// Create a MessageProducer from the Session to the Topic or Queue
 		producer = session.createProducer(destination);

@@ -1,10 +1,9 @@
 package richo.testproject.jms;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import org.apache.commons.lang.time.StopWatch;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * Created by Richo on 2014-04-16.
@@ -19,8 +18,11 @@ public class JmsStuff
 
 	//private variables
 
-	private static ExecutorService executor =
-			Executors.newCachedThreadPool(new ThreadFactoryBuilder().setDaemon(false).setNameFormat("Executor-%s").build());
+	private static ScheduledExecutorService timer =
+			new ScheduledThreadPoolExecutor(10, new ThreadFactoryBuilder().setDaemon(false).setNameFormat("Timer-%s").build());
+
+	private static final ExecutorService executor =
+			Executors.newCachedThreadPool(new ThreadFactoryBuilder().setDaemon(false).setNameFormat("Workers-%s").build());
 
 	//constructors
 
@@ -28,36 +30,48 @@ public class JmsStuff
 
 	public static void main(String[] args) throws InterruptedException
 	{
-		final int numberOfMessagesToSend = 100;
-		JMSMessageConsumer consumer = new JMSMessageConsumer();
+		final StopWatch stopwatch = new StopWatch();
+		stopwatch.start();
+		final int numberOfMessagesToSend = 300000;
+		final int numberOfSenders = 1;
+		System.out.println("Start sending " + numberOfMessagesToSend + " messages");
+		final JMSMessageConsumer consumer = new JMSMessageConsumer();
 
-		executor.execute(new JMSMessageProducer("Hello World!", numberOfMessagesToSend));
+		timer.scheduleAtFixedRate(new InfoTask(), 0, 1, TimeUnit.SECONDS);
+
+		for(int i = 0; i < numberOfSenders; i++)
+		{
+			executor.execute(new JMSMessageProducer("Hello World!", numberOfMessagesToSend/numberOfSenders));
+		}
 
 		executor.execute(consumer);
-		//Thread.sleep(5000);
 
 		System.out.println("Waiting for all messages to be sent");
 		while(Counters.numberOfSentMessages.get() < numberOfMessagesToSend)
 		{
 			Thread.sleep(100);
 		}
+		stopwatch.split();
 		System.out.println("Waiting for all messags to be received");
 		while(Counters.numberOfSentMessages.get() > Counters.numberOfReceivedMessages.get())
 		{
 			Thread.sleep(100);
 		}
+		stopwatch.stop();
 		System.out.println("Done, shutting down");
 		executor.execute(new JMSMessageProducer(JMSMessageConsumer.KEYWORD_SHUTDOWN));
 		executor.shutdown();
+		timer.shutdown();
 		executor.awaitTermination(10, TimeUnit.SECONDS);
-
-		printInfo();
+		printInfo(stopwatch);
 	}
 
-	private static void printInfo()
+	private static void printInfo(StopWatch stopwatch)
 	{
 		System.out.println("Number of sent messages: " + Counters.numberOfSentMessages.get());
 		System.out.println("Number of received messages: " + Counters.numberOfReceivedMessages.get());
 		System.out.println("Number of receives: " + Counters.numberOfReceives.get());
+
+		System.out.println("Time spent: " + stopwatch.toString());
 	}
 }

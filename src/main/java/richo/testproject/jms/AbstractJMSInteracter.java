@@ -11,6 +11,7 @@ import javax.jms.Session;
  */
 class AbstractJMSInteracter
 {
+	protected static final String QUEUE_NAME = "TEST.FOO";
 	protected Session session;
 	protected Connection connection;
 
