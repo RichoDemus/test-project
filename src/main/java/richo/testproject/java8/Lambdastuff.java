@@ -53,7 +53,7 @@ public class Lambdastuff
 		executor.execute(executor::shutdown);
 
 		List<Integer> newList = new ArrayList<>();
-		integers.parallelStream().forEach((i) ->
+		integers.parallelStream().forEach(i ->
 		{
 			if (i % 2 == 0)
 			{
