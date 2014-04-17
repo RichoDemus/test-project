@@ -1,14 +1,13 @@
 package richo.testproject.jms;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
-
 import javax.jms.*;
 
 /**
  * Created by Richo on 2014-04-17.
  */
-public class JMSMessageConsumer implements Runnable, ExceptionListener
+public class JMSMessageConsumer extends AbstractJMSInteracter implements Runnable, ExceptionListener
 {
+	static final String KEYWORD_SHUTDOWN = "KEYWORD.SHUTDOWN";
 	//public variables
 
 	//protected variables
@@ -17,6 +16,9 @@ public class JMSMessageConsumer implements Runnable, ExceptionListener
 
 	//private variables
 
+	private MessageConsumer consumer;
+	private boolean running;
+
 	//constructors
 
 	//methods
@@ -24,48 +26,77 @@ public class JMSMessageConsumer implements Runnable, ExceptionListener
 
 	@Override
 	public void run() {
-     try {
+		running = true;
 
-         // Create a ConnectionFactory
-         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("vm://localhost");
+		try {
+			connect();
 
-         // Create a Connection
-         Connection connection = connectionFactory.createConnection();
-         connection.start();
 
-         connection.setExceptionListener(this);
+			// Wait for a message
+			while(running)
+			{
+				System.out.println("Listening for a message");
+				Counters.numberOfReceives.incrementAndGet();
+				Message message = consumer.receive(1000);
 
-         // Create a Session
-         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+				if(message == null)
+				{
+					System.out.println("Did not receive a message, waiting for a new one");
+					continue;
+				}
 
-         // Create the destination (Topic or Queue)
-         Destination destination = session.createQueue("TEST.FOO");
+				Counters.numberOfReceivedMessages.incrementAndGet();
 
-         // Create a MessageConsumer from the Session to the Topic or Queue
-         MessageConsumer consumer = session.createConsumer(destination);
+				if (message instanceof TextMessage) {
+					TextMessage textMessage = (TextMessage) message;
+					String text = textMessage.getText();
+					System.out.println("Received: " + text);
+					if(text.startsWith(JMSMessageConsumer.KEYWORD_SHUTDOWN))
+					{
+						System.out.println("Received shutdown, shutting down");
+						running = false;
+					}
+				} else {
+					System.out.println("Received: " + message);
+				}
 
-         // Wait for a message
-		 //todo loop or something
-         Message message = consumer.receive(1000);
+			}
 
-         if (message instanceof TextMessage) {
-             TextMessage textMessage = (TextMessage) message;
-             String text = textMessage.getText();
-             System.out.println("Received: " + text);
-         } else {
-             System.out.println("Received: " + message);
-         }
+			disconnect();
+		} catch (Exception e) {
+			System.out.println("Caught: " + e);
+			e.printStackTrace();
+		}
+	}
 
-         consumer.close();
-         session.close();
-         connection.close();
-     } catch (Exception e) {
-         System.out.println("Caught: " + e);
-         e.printStackTrace();
-     }
- }
+	protected void connect() throws JMSException
+	{
+		super.connect();
 
- public synchronized void onException(JMSException ex) {
-     System.out.println("JMS Exception occured.  Shutting down client.");
- }
+
+		connection.setExceptionListener(this);
+
+
+		// Create the destination (Topic or Queue)
+		Destination destination = session.createQueue("TEST.FOO");
+
+		// Create a MessageConsumer from the Session to the Topic or Queue
+		consumer = session.createConsumer(destination);
+	}
+
+	@Override
+	protected void disconnect() throws JMSException
+	{
+		super.disconnect();
+		consumer.close();
+	}
+
+	public synchronized void onException(JMSException ex) {
+		System.out.println("JMS Exception occured.  Shutting down client.");
+	}
+
+	public void stop()
+	{
+		running = false;
+	}
 }

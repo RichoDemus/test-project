@@ -1,13 +1,11 @@
 package richo.testproject.jms;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
-
 import javax.jms.*;
 
 /**
  * Created by Richo on 2014-04-17.
  */
-public class JMSMessageProducer implements Runnable
+public class JMSMessageProducer extends AbstractJMSInteracter implements Runnable
 {
 	//public variables
 
@@ -18,10 +16,22 @@ public class JMSMessageProducer implements Runnable
 	//private variables
 
 	private MessageProducer producer;
-	private Session session;
-	private Connection connection;
+	private final String msg;
+	private final int numberOfMessagesToSend;
 
 	//constructors
+
+	public JMSMessageProducer(String msg, int numberOfMessagesToSend)
+	{
+		this.msg = msg;
+		this.numberOfMessagesToSend = numberOfMessagesToSend;
+	}
+
+	public JMSMessageProducer(String keywordShutdown)
+	{
+		this(keywordShutdown, 1);
+	}
+
 
 	//methods
 
@@ -31,15 +41,16 @@ public class JMSMessageProducer implements Runnable
      try {
 		 connect();
 
+         //System.out.println("Sent message: ["+ message.getText() + "] : " + Thread.currentThread().getName());
+	     for(int i = 0; i < numberOfMessagesToSend; i++)
+	     {
+		     // Create a messages
+		     TextMessage message = session.createTextMessage(msg + ": " + i);
 
-		 // Create a messages
-         String text = "Hello world! From: " + Thread.currentThread().getName() + " : " + this.hashCode();
-         TextMessage message = session.createTextMessage(text);
-
-         // Tell the producer to send the message
-         System.out.println("Sent message: "+ message.hashCode() + " : " + Thread.currentThread().getName());
-         producer.send(message);
-
+		     // Tell the producer to send the message
+		     producer.send(message);
+		     Counters.numberOfSentMessages.incrementAndGet();
+	     }
 
 		 disconnect();
 
@@ -51,24 +62,9 @@ public class JMSMessageProducer implements Runnable
      }
  }
 
-	private void disconnect() throws JMSException
+	protected void connect() throws JMSException
 	{
-		// Clean up
-		session.close();
-		connection.close();
-	}
-
-	private void connect() throws JMSException
-	{
-		// Create a ConnectionFactory
-		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("vm://localhost");
-
-		// Create a Connection
-		connection = connectionFactory.createConnection();
-		connection.start();
-
-		// Create a Session
-		session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+		super.connect();
 
 		// Create the destination (Topic or Queue)
 		Destination destination = session.createQueue("TEST.FOO");

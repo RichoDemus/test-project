@@ -28,9 +28,36 @@ public class JmsStuff
 
 	public static void main(String[] args) throws InterruptedException
 	{
-		executor.execute(new JMSMessageProducer());
-		executor.execute(new JMSMessageConsumer());
+		final int numberOfMessagesToSend = 100;
+		JMSMessageConsumer consumer = new JMSMessageConsumer();
+
+		executor.execute(new JMSMessageProducer("Hello World!", numberOfMessagesToSend));
+
+		executor.execute(consumer);
+		//Thread.sleep(5000);
+
+		System.out.println("Waiting for all messages to be sent");
+		while(Counters.numberOfSentMessages.get() < numberOfMessagesToSend)
+		{
+			Thread.sleep(100);
+		}
+		System.out.println("Waiting for all messags to be received");
+		while(Counters.numberOfSentMessages.get() > Counters.numberOfReceivedMessages.get())
+		{
+			Thread.sleep(100);
+		}
+		System.out.println("Done, shutting down");
+		executor.execute(new JMSMessageProducer(JMSMessageConsumer.KEYWORD_SHUTDOWN));
 		executor.shutdown();
 		executor.awaitTermination(10, TimeUnit.SECONDS);
+
+		printInfo();
+	}
+
+	private static void printInfo()
+	{
+		System.out.println("Number of sent messages: " + Counters.numberOfSentMessages.get());
+		System.out.println("Number of received messages: " + Counters.numberOfReceivedMessages.get());
+		System.out.println("Number of receives: " + Counters.numberOfReceives.get());
 	}
 }
