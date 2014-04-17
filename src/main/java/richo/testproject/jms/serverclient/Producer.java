@@ -3,11 +3,13 @@ package richo.testproject.jms.serverclient;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
+import java.io.IOError;
+import java.io.IOException;
 
 /**
  * Created by Richo on 2014-04-17.
  */
-public class Producer
+public class Producer implements ExceptionListener
 {
 	//public variables
 
@@ -27,12 +29,12 @@ public class Producer
 
 	//methods
 
-	public static void main(String[] args) throws JMSException
+	public static void main(String[] args) throws JMSException, IOException
 	{
 		new Producer().produce();
 	}
 
-	private void produce() throws JMSException
+	private void produce() throws JMSException, IOException
 	{
 		// Create a ConnectionFactory
 
@@ -44,6 +46,8 @@ public class Producer
 
 		// Create a Session
 		session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+		connection.setExceptionListener(this);
 
 				// Create the destination (Topic or Queue)
 		Destination destination = session.createQueue(Consumer.QUEUE_NAME);
@@ -59,5 +63,9 @@ public class Producer
 
 		session.close();
 		connection.close();
+	}
+
+	public synchronized void onException(JMSException ex) {
+		System.out.println("JMS Exception occured.  Shutting down client.");
 	}
 }
