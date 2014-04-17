@@ -24,4 +24,5 @@ test-output
 /out
 .idea/workspace.xml
 /target
+activemq-data
 
