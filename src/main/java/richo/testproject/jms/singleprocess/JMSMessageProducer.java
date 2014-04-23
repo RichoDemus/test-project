@@ -3,7 +3,7 @@ package richo.testproject.jms.singleprocess;
 import javax.jms.*;
 
 /**
- * Created by Richo on 2014-04-17.
+ * Class that puts messages on a JMS queue
  */
 public class JMSMessageProducer extends AbstractJMSInteracter implements Runnable
 {
@@ -52,6 +52,8 @@ public class JMSMessageProducer extends AbstractJMSInteracter implements Runnabl
 				// Tell the producer to send the message
 				producer.send(message, DeliveryMode.NON_PERSISTENT, 4, 10000);
 				Counters.numberOfSentMessages.incrementAndGet();
+				if(JMSMessageConsumer.SHOULD_YIELD)
+					Thread.yield();
 			}
 
 			disconnect();

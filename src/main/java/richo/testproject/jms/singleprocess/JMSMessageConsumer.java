@@ -3,11 +3,12 @@ package richo.testproject.jms.singleprocess;
 import javax.jms.*;
 
 /**
- * Created by Richo on 2014-04-17.
+ * Class that reads messages from a JMS queue
  */
 public class JMSMessageConsumer extends AbstractJMSInteracter implements Runnable, ExceptionListener
 {
 	static final String KEYWORD_SHUTDOWN = "KEYWORD.SHUTDOWN";
+	static final boolean SHOULD_YIELD = true;
 	//public variables
 
 	//protected variables
@@ -64,7 +65,8 @@ public class JMSMessageConsumer extends AbstractJMSInteracter implements Runnabl
 				{
 					//System.out.println("Received: " + message);
 				}
-
+				if(JMSMessageConsumer.SHOULD_YIELD)
+					Thread.yield();
 			}
 
 			disconnect();
