@@ -22,7 +22,7 @@ public class SparkWebserverMain
 	public static void main(String[] args)
 	{
 		Spark.setPort(80);
-		Spark.get("/", (request, response) -> "<html><body><h1>Hello World!</h1></body></html>");
+		Spark.get("/", (request, response) -> "<html>\n\t<body>\n\t\t<h1>Hello World!</h1>\n\t</body>\n</html>");
 
 	}
 
