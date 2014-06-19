@@ -1,8 +1,6 @@
 package richo.testproject.web.jetty.jettysuntest.handlers;
 
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import org.apache.commons.io.IOUtils;
 import richo.testproject.web.jetty.jettysuntest.IHttpHandler;
 import richo.testproject.web.jetty.jettysuntest.QueryString;
@@ -34,7 +32,8 @@ public class OldHandler implements IHttpHandler
 	@Override
 	public javax.servlet.http.HttpServlet getServlet()
 	{
-		return new SunHandlerWrapper(new LegacyHttpHandler() {
+		return new SunHandlerWrapper(new LegacyHttpHandler()
+		{
 
 			@Override
 			public void handle(LegacyHttpExchange httpExchange) throws IOException
@@ -71,12 +70,12 @@ public class OldHandler implements IHttpHandler
 
 				QueryString parameters = new QueryString(httpExchange.getRequestURI().getQuery());
 
-				if(requestData != null && requestData.length > 0)
+				if (requestData != null && requestData.length > 0)
 				{
 					parameters.putAll(new QueryString(new String(requestData)));
 				}
 
-				if(!parameters.containsKey("ST.MSISDN"))
+				if (!parameters.containsKey("ST.MSISDN"))
 				{
 					System.out.println("Did not find parameter ST.MSISDN in request, will not save in device store");
 					return;

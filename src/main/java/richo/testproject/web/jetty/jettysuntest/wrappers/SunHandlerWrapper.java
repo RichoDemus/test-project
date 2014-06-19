@@ -22,13 +22,13 @@ public class SunHandlerWrapper extends HttpServlet
 	/**
 	 * Wraps the httphandler in a class that fulfills the servlet api <br/>
 	 * using this is deprecated, instead create a regular {@link javax.servlet.http.HttpServlet}
+	 *
 	 * @param handler the handler to wrap
 	 */
 	@Deprecated
 	public SunHandlerWrapper(LegacyHttpHandler handler)
 	{
 		this.handler = handler;
-		logger.warn("Not yet implemented");
 	}
 
 	@Override
@@ -41,6 +41,6 @@ public class SunHandlerWrapper extends HttpServlet
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		super.doPost(req, resp);
+		doGet(req, resp);
 	}
 }

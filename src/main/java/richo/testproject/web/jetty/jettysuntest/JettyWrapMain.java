@@ -34,7 +34,7 @@ public class JettyWrapMain
 
 	public static void main(String[] args) throws Exception
 	{
-		JettyWrapMain jettyWrapMain = new JettyWrapMain(Arrays.asList(new PureServlet(), new PureServletWithTwoPaths()),Arrays.asList(new OldHandler()));
+		JettyWrapMain jettyWrapMain = new JettyWrapMain(Arrays.asList(new PureServlet(), new PureServletWithTwoPaths()), Arrays.asList(new OldHandler()));
 		jettyWrapMain.start();
 		jettyWrapMain.join();
 	}
@@ -73,7 +73,7 @@ public class JettyWrapMain
 		final StringBuilder htmlList = new StringBuilder();
 
 		htmlList.append("<ul>");
-		for(Servlet servlet : servlets)
+		for (Servlet servlet : servlets)
 		{
 			addServlet(context, htmlList, servlet);
 		}
@@ -101,7 +101,7 @@ public class JettyWrapMain
 			logger.error("{} when attempting to read annotations for {}", e.getClass().getSimpleName(), servlet.getClass().getSimpleName(), e);
 			return;
 		}
-		for(String path : paths)
+		for (String path : paths)
 		{
 			context.addServlet(new ServletHolder(servlet), path);
 			htmlList.append(String.format(LIST_ITEM, path, description));
@@ -124,7 +124,7 @@ public class JettyWrapMain
 		@Override
 		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 		{
-			logger.debug("Get: {}",request.getPathInfo());
+			logger.debug("Get: {}", request.getPathInfo());
 			//super.doGet(request, response);
 			response.setContentType("text/html");
 			response.setStatus(HttpServletResponse.SC_OK);
