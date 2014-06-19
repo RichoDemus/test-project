@@ -1,6 +1,5 @@
 package richo.testproject.shuffle.mash;
 
-import org.apache.commons.collections.CollectionUtils;
 
 import java.util.*;
 
@@ -48,7 +47,7 @@ class Deck
 
 		int indexFromRightToInsertInto = 0;
 
-		while (CollectionUtils.isNotEmpty(leftHand))
+		while (leftHand.size() > 0)
 		{
 			int numberOfCardsToTakeFromLeftHand = getNumberOfCardsToTakeFromLeftHand(leftHand);
 
