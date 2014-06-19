@@ -21,7 +21,7 @@ public class SunHandlerWrapper extends HttpServlet
 	 * @param httpHandler the handler to wrap
 	 */
 	@Deprecated
-	public SunHandlerWrapper(HttpHandler httpHandler)
+	public SunHandlerWrapper(LegacyHttpHandler httpHandler)
 	{
 		logger.warn("Not yet implemented");
 	}

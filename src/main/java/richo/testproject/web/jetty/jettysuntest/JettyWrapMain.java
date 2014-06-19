@@ -103,16 +103,6 @@ public class JettyWrapMain
 			logger.error("{} when attempting to read annotations for {}", e.getClass().getSimpleName(), servlet.getClass().getSimpleName(), e);
 			return;
 		}
-		if(StringUtils.isBlank(description))
-		{
-			logger.error("No description for class {}", servlet.getClass().getSimpleName());
-			return;
-		}
-		if(paths.length == 0)
-		{
-			logger.error("No paths for class {}", servlet.getClass().getSimpleName());
-			return;
-		}
 		for(String path : paths)
 		{
 			context.addServlet(new ServletHolder(servlet), path);

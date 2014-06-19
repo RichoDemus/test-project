@@ -6,6 +6,8 @@ import com.sun.net.httpserver.HttpHandler;
 import org.apache.commons.io.IOUtils;
 import richo.testproject.web.jetty.jettysuntest.IHttpHandler;
 import richo.testproject.web.jetty.jettysuntest.QueryString;
+import richo.testproject.web.jetty.jettysuntest.wrappers.LegacyHttpExchange;
+import richo.testproject.web.jetty.jettysuntest.wrappers.LegacyHttpHandler;
 import richo.testproject.web.jetty.jettysuntest.wrappers.SunHandlerWrapper;
 
 import java.io.IOException;
@@ -32,10 +34,10 @@ public class OldHandler implements IHttpHandler
 	@Override
 	public javax.servlet.http.HttpServlet getServlet()
 	{
-		return new SunHandlerWrapper(new HttpHandler() {
+		return new SunHandlerWrapper(new LegacyHttpHandler() {
 
 			@Override
-			public void handle(HttpExchange httpExchange) throws IOException
+			public void handle(LegacyHttpExchange httpExchange) throws IOException
 			{
 				StringBuilder sb = new StringBuilder();
 
