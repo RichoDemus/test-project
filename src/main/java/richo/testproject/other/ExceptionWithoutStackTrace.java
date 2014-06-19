@@ -1,4 +1,4 @@
-package richo.testproject;
+package richo.testproject.other;
 
 /**
  * Created by tjerngrr on 2014-04-07.

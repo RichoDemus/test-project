@@ -1,6 +1,7 @@
-package richo.testproject;
+package richo.testproject.other;
 
 import org.junit.Test;
+import richo.testproject.other.ToStringObject;
 
 import java.util.Arrays;
 import java.util.HashMap;

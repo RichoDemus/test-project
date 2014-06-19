@@ -1,4 +1,4 @@
-package richo.testproject;
+package richo.testproject.other;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 

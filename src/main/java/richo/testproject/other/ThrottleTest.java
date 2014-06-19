@@ -1,4 +1,4 @@
-package richo.testproject;
+package richo.testproject.other;
 
 import com.google.common.util.concurrent.RateLimiter;
 import org.apache.commons.lang.time.StopWatch;

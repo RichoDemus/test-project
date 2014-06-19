@@ -1,7 +1,8 @@
-package richo.testproject;
+package richo.testproject.other;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+import richo.testproject.other.MockitoStuff;
 
 import java.util.List;
 
