@@ -35,7 +35,7 @@ public class SunHandlerWrapper extends HttpServlet
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
 		logger.info("doGet");
-		handler.handle(new LegacyHttpExchange(req, resp));
+		handler.handle(new HttpExchangeWrapper(req, resp));
 	}
 
 	@Override

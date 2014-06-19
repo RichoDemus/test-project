@@ -1,10 +1,10 @@
 package richo.testproject.web.jetty.jettysuntest.handlers;
 
 
+import com.sun.net.httpserver.HttpExchange;
 import org.apache.commons.io.IOUtils;
 import richo.testproject.web.jetty.jettysuntest.IHttpHandler;
 import richo.testproject.web.jetty.jettysuntest.QueryString;
-import richo.testproject.web.jetty.jettysuntest.wrappers.LegacyHttpExchange;
 import richo.testproject.web.jetty.jettysuntest.wrappers.LegacyHttpHandler;
 import richo.testproject.web.jetty.jettysuntest.wrappers.SunHandlerWrapper;
 
@@ -36,7 +36,7 @@ public class OldHandler implements IHttpHandler
 		{
 
 			@Override
-			public void handle(LegacyHttpExchange httpExchange) throws IOException
+			public void handle(HttpExchange httpExchange) throws IOException
 			{
 				StringBuilder sb = new StringBuilder();
 

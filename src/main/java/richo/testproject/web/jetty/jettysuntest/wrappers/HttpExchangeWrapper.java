@@ -2,6 +2,7 @@ package richo.testproject.web.jetty.jettysuntest.wrappers;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpContext;
+import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpPrincipal;
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -16,15 +17,15 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by Richo on 2014-06-19.
+ * Wraps a {@link javax.servlet.http.HttpServletRequest} and {@link javax.servlet.http.HttpServletResponse} into a {@link com.sun.net.httpserver.HttpExchange}
  */
 @Deprecated
-public class LegacyHttpExchange
+public class HttpExchangeWrapper extends HttpExchange
 {
 	private final HttpServletRequest req;
 	private final HttpServletResponse resp;
 
-	public LegacyHttpExchange(HttpServletRequest req, HttpServletResponse resp)
+	public HttpExchangeWrapper(HttpServletRequest req, HttpServletResponse resp)
 	{
 
 		this.req = req;
@@ -69,14 +70,28 @@ public class LegacyHttpExchange
 		throw new NotImplementedException("NYI");
 	}
 
-	public InputStream getRequestBody() throws IOException
+	public InputStream getRequestBody()
 	{
-		return req.getInputStream();
+		try
+		{
+			return req.getInputStream();
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
-	public OutputStream getResponseBody() throws IOException
+	public OutputStream getResponseBody()
 	{
-		return resp.getOutputStream();
+		try
+		{
+			return resp.getOutputStream();
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
 	public void sendResponseHeaders(int status, long contentLength) throws java.io.IOException

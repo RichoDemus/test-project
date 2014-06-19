@@ -84,7 +84,6 @@ public class JettyWrapMain
 		htmlList.append("</ul>");
 
 		html = String.format(STATIC_HTML, htmlList);
-
 	}
 
 	private void addServlet(ServletContextHandler context, StringBuilder htmlList, Servlet servlet)
@@ -115,7 +114,7 @@ public class JettyWrapMain
 		String description = handler.getDescription();
 		context.addServlet(new ServletHolder(handler.getServlet()), "/" + path);
 		htmlList.append("<li><a href=\"").append(path).append("\">").append(description).append("</a></li>\n");
-		logger.debug("Added handler {} with path {}", handler.getClass().getSimpleName(), path);
+		logger.debug("Added handler {} with path {}", handler.getClass().getSimpleName(), "/" + path);
 	}
 
 
