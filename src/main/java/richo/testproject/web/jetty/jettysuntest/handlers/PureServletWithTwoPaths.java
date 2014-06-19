@@ -13,12 +13,10 @@ public class PureServletWithTwoPaths extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		super.doGet(req, resp);
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-	{
-		super.doPost(req, resp);
+		String html = "<html><body><h1>Second Pure Servlet</h1></body></html>";
+		resp.setStatus(HttpServletResponse.SC_OK);
+		resp.setContentLength(html.getBytes().length);
+		resp.getOutputStream().write(html.getBytes());
+		resp.getOutputStream().close();
 	}
 }

@@ -1,12 +1,10 @@
 package richo.testproject.web.jetty.jettysuntest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import richo.testproject.web.jetty.jettysuntest.handlers.NewServletHolder;
 import richo.testproject.web.jetty.jettysuntest.handlers.OldHandler;
 import richo.testproject.web.jetty.jettysuntest.handlers.PureServlet;
 import richo.testproject.web.jetty.jettysuntest.handlers.PureServletWithTwoPaths;
@@ -36,7 +34,7 @@ public class JettyWrapMain
 
 	public static void main(String[] args) throws Exception
 	{
-		JettyWrapMain jettyWrapMain = new JettyWrapMain(Arrays.asList(new PureServlet(), new PureServletWithTwoPaths()),Arrays.asList(new NewServletHolder(), new OldHandler()));
+		JettyWrapMain jettyWrapMain = new JettyWrapMain(Arrays.asList(new PureServlet(), new PureServletWithTwoPaths()),Arrays.asList(new OldHandler()));
 		jettyWrapMain.start();
 		jettyWrapMain.join();
 	}

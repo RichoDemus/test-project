@@ -3,51 +3,130 @@ package richo.testproject.web.jetty.jettysuntest.wrappers;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpPrincipal;
+import org.apache.commons.lang3.NotImplementedException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.Object;
 import java.lang.String;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Richo on 2014-06-19.
  */
 @Deprecated
-public interface LegacyHttpExchange
+public class LegacyHttpExchange
 {
-	Headers getRequestHeaders();
+	private final HttpServletRequest req;
+	private final HttpServletResponse resp;
 
-	Headers getResponseHeaders();
+	public LegacyHttpExchange(HttpServletRequest req, HttpServletResponse resp)
+	{
 
-	URI getRequestURI();
+		this.req = req;
+		this.resp = resp;
+	}
 
-	String getRequestMethod();
+	public Headers getRequestHeaders()
+	{
+		Headers result = new Headers();
 
-	HttpContext getHttpContext();
+		for (String header : Collections.list(req.getHeaderNames()))
+		{
+			List<String> values = Collections.list(req.getHeaders(header));
+			result.put(header, values);
+		}
 
-	void close();
+		return result;
+	}
 
-	InputStream getRequestBody();
+	public Headers getResponseHeaders()
+	{
+		throw new NotImplementedException("NYI");
+	}
 
-	OutputStream getResponseBody();
+	public URI getRequestURI()
+	{
+		return URI.create(req.getRequestURI());
+	}
 
-	void sendResponseHeaders(int i, long l) throws java.io.IOException;
+	public String getRequestMethod()
+	{
+		return req.getMethod();
+	}
 
-	InetSocketAddress getRemoteAddress();
+	public HttpContext getHttpContext()
+	{
+		throw new NotImplementedException("NYI");
+	}
 
-	int getResponseCode();
+	public void close()
+	{
+		throw new NotImplementedException("NYI");
+	}
 
-	InetSocketAddress getLocalAddress();
+	public InputStream getRequestBody() throws IOException
+	{
+		return req.getInputStream();
+	}
 
-	String getProtocol();
+	public OutputStream getResponseBody() throws IOException
+	{
+		return resp.getOutputStream();
+	}
 
-	Object getAttribute(String s);
+	public void sendResponseHeaders(int status, long contentLength) throws java.io.IOException
+	{
+		resp.setStatus(status);
+		resp.setContentLength((int) contentLength);
+	}
 
-	void setAttribute(String s, Object o);
+	public InetSocketAddress getRemoteAddress()
+	{
+		throw new NotImplementedException("NYI");
+	}
 
-	void setStreams(InputStream inputStream, OutputStream outputStream);
+	public int getResponseCode()
+	{
+		throw new NotImplementedException("NYI");
+	}
 
-	HttpPrincipal getPrincipal();
+	public InetSocketAddress getLocalAddress()
+	{
+		throw new NotImplementedException("NYI");
+	}
+
+	public String getProtocol()
+	{
+		throw new NotImplementedException("NYI");
+	}
+
+	public Object getAttribute(String s)
+	{
+		throw new NotImplementedException("NYI");
+	}
+
+	public void setAttribute(String s, Object o)
+	{
+		throw new NotImplementedException("NYI");
+	}
+
+	public void setStreams(InputStream inputStream, OutputStream outputStream)
+	{
+		throw new NotImplementedException("NYI");
+	}
+
+	public HttpPrincipal getPrincipal()
+	{
+		throw new NotImplementedException("NYI");
+	}
 }
