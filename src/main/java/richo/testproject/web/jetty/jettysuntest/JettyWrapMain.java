@@ -1,6 +1,6 @@
 package richo.testproject.web.jetty.jettysuntest;
 
-import org.eclipse.jetty.server.Handler;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -8,14 +8,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import richo.testproject.web.jetty.jettysuntest.handlers.NewServletHolder;
 import richo.testproject.web.jetty.jettysuntest.handlers.OldHandler;
+import richo.testproject.web.jetty.jettysuntest.handlers.PureServlet;
+import richo.testproject.web.jetty.jettysuntest.handlers.PureServletWithTwoPaths;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -25,23 +27,27 @@ import java.util.List;
  */
 public class JettyWrapMain
 {
-	private List<IHttpHandler> handlers = Collections.<IHttpHandler>emptyList();
+	private List<Servlet> servlets;
+	private List<IHttpHandler> legacyHandlers = Collections.<IHttpHandler>emptyList();
 	private String html;
 	private Server server;
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-
-	public JettyWrapMain(List<IHttpHandler> iHttpHandlers)
-	{
-		this.handlers = iHttpHandlers;
-		server = new Server(80);
-		updateHandlers();
-	}
+	private ServletUtil servletUtil;
 
 	public static void main(String[] args) throws Exception
 	{
-		JettyWrapMain jettyWrapMain = new JettyWrapMain(Arrays.asList(new NewServletHolder(), new OldHandler()));
+		JettyWrapMain jettyWrapMain = new JettyWrapMain(Arrays.asList(new PureServlet(), new PureServletWithTwoPaths()),Arrays.asList(new NewServletHolder(), new OldHandler()));
 		jettyWrapMain.start();
 		jettyWrapMain.join();
+	}
+
+	public JettyWrapMain(List<Servlet> servlets, List<IHttpHandler> legacyHandlers)
+	{
+		this.servlets = servlets;
+		this.legacyHandlers = legacyHandlers;
+		servletUtil = new ServletUtil();
+		server = new Server(80);
+		updateHandlers();
 	}
 
 	private void start() throws Exception
@@ -57,7 +63,6 @@ public class JettyWrapMain
 	private void updateHandlers()
 	{
 		logger.debug("Updating handlers");
-		List<Handler> handlerList = new ArrayList<Handler>();
 
 		//Create and set the root handler
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
@@ -66,25 +71,63 @@ public class JettyWrapMain
 
 		context.addServlet(new ServletHolder(new RootHandler()), "/*");
 
-		/*
-		ContextHandler rootContext = new ContextHandler("/");
-		rootContext.setHandler(new RootHandler());
-		handlerList.add(rootContext);
-		*/
-
 		//Create and add all the subpages
 		final StringBuilder htmlList = new StringBuilder();
 
 		htmlList.append("<ul>");
-		for (IHttpHandler handler : handlers) {
-			context.addServlet(new ServletHolder(handler.getServlet()), "/" + handler.getContextPath());
-			htmlList.append("<li><a href=\"").append(handler.getContextPath()).append("\">").append(handler.getDescription()).append("</a></li>\n");
-			logger.debug("Added handler {} with path {}", handler.getClass().getSimpleName(), handler.getContextPath());
+		for(Servlet servlet : servlets)
+		{
+			addServlet(context, htmlList, servlet);
+		}
+		for (IHttpHandler handler : legacyHandlers)
+		{
+			addLegacyHandler(context, htmlList, handler);
 		}
 		htmlList.append("</ul>");
 
 		html = String.format(STATIC_HTML, htmlList);
 
+	}
+
+	private void addServlet(ServletContextHandler context, StringBuilder htmlList, Servlet servlet)
+	{
+		String[] paths;
+		String description;
+		try
+		{
+			paths = servletUtil.getPath(servlet.getClass());
+			description = servletUtil.getDescription(servlet.getClass());
+		}
+		catch (InitializationException e)
+		{
+			logger.error("{} when attempting to read annotations for {}", e.getClass().getSimpleName(), servlet.getClass().getSimpleName(), e);
+			return;
+		}
+		if(StringUtils.isBlank(description))
+		{
+			logger.error("No description for class {}", servlet.getClass().getSimpleName());
+			return;
+		}
+		if(paths.length == 0)
+		{
+			logger.error("No paths for class {}", servlet.getClass().getSimpleName());
+			return;
+		}
+		for(String path : paths)
+		{
+			context.addServlet(new ServletHolder(servlet), path);
+			htmlList.append(String.format(LIST_ITEM, path, description));
+			logger.debug("Added servlet {} with path {}", servlet.getClass().getSimpleName(), path);
+		}
+	}
+
+	private void addLegacyHandler(ServletContextHandler context, StringBuilder htmlList, IHttpHandler handler)
+	{
+		String path = handler.getContextPath();
+		String description = handler.getDescription();
+		context.addServlet(new ServletHolder(handler.getServlet()), "/" + path);
+		htmlList.append("<li><a href=\"").append(path).append("\">").append(description).append("</a></li>\n");
+		logger.debug("Added handler {} with path {}", handler.getClass().getSimpleName(), path);
 	}
 
 
@@ -104,8 +147,8 @@ public class JettyWrapMain
 		}
 	}
 
-
-	public static final String STATIC_HTML =
+	private static final String LIST_ITEM = "<li><a href=\"%s\">%s</a></li>\n";
+	private static final String STATIC_HTML =
 			"<html>\n" +
 					"<head>\n" +
 					"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n" +
