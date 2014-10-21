@@ -3,7 +3,7 @@ package richo.testproject.jms.apistuff.mains;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import richo.testproject.jms.apistuff.api.Api;
-import richo.testproject.jms.server.ApiServerImpl;
+import richo.testproject.jms.apistuff.implementation.server.ApiServerImpl;
 
 public class ClientMain
 {

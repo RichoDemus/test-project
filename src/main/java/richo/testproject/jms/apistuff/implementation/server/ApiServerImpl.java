@@ -1,4 +1,4 @@
-package richo.testproject.jms.server;
+package richo.testproject.jms.apistuff.implementation.server;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
