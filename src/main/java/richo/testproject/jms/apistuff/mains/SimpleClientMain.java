@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import richo.testproject.jms.apistuff.api.Api;
 import richo.testproject.jms.apistuff.implementation.server.ApiServerImpl;
 
-public class ClientMain
+public class SimpleClientMain
 {
-	private static final Logger logger = LoggerFactory.getLogger(ClientMain.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(SimpleClientMain.class.getName());
 
 	public static void main(String[] args)
 	{
