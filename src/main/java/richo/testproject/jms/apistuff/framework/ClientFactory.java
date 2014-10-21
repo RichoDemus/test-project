@@ -5,5 +5,10 @@ import org.slf4j.LoggerFactory;
 
 public class ClientFactory
 {
-  private final Logger logger = LoggerFactory.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
+	public static <T> T create(Class<T> api)
+	{
+		return null;
+	}
 }
