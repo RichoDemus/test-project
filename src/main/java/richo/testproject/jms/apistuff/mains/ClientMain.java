@@ -1,4 +1,4 @@
-package richo.testproject.jms.api.mains;
+package richo.testproject.jms.apistuff.mains;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
