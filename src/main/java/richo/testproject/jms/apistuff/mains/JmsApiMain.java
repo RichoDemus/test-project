@@ -14,6 +14,7 @@ public class JmsApiMain
 {
 	private static final String BROKER_ADDRESS = "tcp://localhost:61616";
 	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private BrokerService broker;
 
 	public static void main(String[] args) throws Exception
 	{
@@ -35,18 +36,24 @@ public class JmsApiMain
 		client.asynchBounceString("IF this is readable, async bounce works", System.out::println);
 
 		Thread.sleep(1000);
+
+		tearDownBroker();
 	}
-
-
 
 	private void setupBroker() throws Exception
 	{
-		BrokerService broker = new BrokerService();
+		broker = new BrokerService();
 
 		// configure the broker
 		broker.addConnector(BROKER_ADDRESS);
 
 		broker.start();
+	}
+
+
+	private void tearDownBroker() throws Exception
+	{
+		broker.stop();
 	}
 
 

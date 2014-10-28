@@ -104,6 +104,15 @@ public class ApiToJmsBridge implements Api, ExceptionListener, MessageListener
 	public void onException(JMSException e)
 	{
 		logger.error("OnException: ", e);
+		try
+		{
+			connection.close();
+			session.close();
+		}
+		catch (JMSException e1)
+		{
+			e1.printStackTrace();
+		}
 	}
 
 	@Override
