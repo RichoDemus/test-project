@@ -18,13 +18,15 @@ import java.util.function.Consumer;
 
 public class ApiToJmsBridge implements Api, ExceptionListener
 {
+	public static final String SYNC_BOUNCE_STRING = "syncBounceString";
+
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private final Session session;
-	private final MessageProducer producerForAsynchBounceString;
 	private final Connection connection;
+	private final MessageProducer producerForAsynchBounceString;
 
-	public ApiToJmsBridge(final String brokerAddress) throws JMSException
+	public ApiToJmsBridge(@NotNull final String brokerAddress) throws JMSException
 	{
 		final ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerAddress);
 
@@ -35,7 +37,7 @@ public class ApiToJmsBridge implements Api, ExceptionListener
 
 		connection.setExceptionListener(this);
 
-		final Destination destination = session.createQueue("syncBounceString");
+		final Destination destination = session.createQueue(SYNC_BOUNCE_STRING);
 
 		producerForAsynchBounceString = session.createProducer(destination);
 		producerForAsynchBounceString.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
@@ -88,6 +90,5 @@ public class ApiToJmsBridge implements Api, ExceptionListener
 	public void onException(JMSException e)
 	{
 		logger.error("OnException: ", e);
-
 	}
 }

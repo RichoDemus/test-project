@@ -1,5 +1,6 @@
 package richo.testproject.jms.apistuff.mains;
 
+import org.apache.activemq.broker.BrokerService;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,18 +12,21 @@ import java.util.function.Consumer;
 
 public class JmsApiMain
 {
+	private static final String BROKER_ADDRESS = "tcp://localhost:61616";
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	public static void main(String[] args) throws InterruptedException
+	public static void main(String[] args) throws Exception
 	{
 		new JmsApiMain().stuff();
 	}
 
-	private void stuff() throws InterruptedException
+	private void stuff() throws Exception
 	{
-		final Api client = ClientFactory.create(Api.class);
+		setupBroker();
 
-		ServerFactory.create(new BackendImpl());
+		final Api client = ClientFactory.create(Api.class, BROKER_ADDRESS);
+
+		ServerFactory.create(new BackendImpl(), BROKER_ADDRESS);
 
 		logger.info("Stuff initialized");
 
@@ -33,6 +37,17 @@ public class JmsApiMain
 		Thread.sleep(1000);
 	}
 
+
+
+	private void setupBroker() throws Exception
+	{
+		BrokerService broker = new BrokerService();
+
+		// configure the broker
+		broker.addConnector(BROKER_ADDRESS);
+
+		broker.start();
+	}
 
 
 	private class BackendImpl implements Api
