@@ -11,12 +11,15 @@ import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import java.util.function.Consumer;
 
-public class ApiToJmsBridge implements Api, ExceptionListener
+public class ApiToJmsBridge implements Api, ExceptionListener, MessageListener
 {
 	public static final String SYNC_BOUNCE_STRING = "syncBounceString";
 
@@ -25,6 +28,8 @@ public class ApiToJmsBridge implements Api, ExceptionListener
 	private final Session session;
 	private final Connection connection;
 	private final MessageProducer producerForAsynchBounceString;
+	private final Destination destinationForAsynchBounceString;
+	private final MessageConsumer consumerForAsynchBounceStringResponses;
 
 	public ApiToJmsBridge(@NotNull final String brokerAddress) throws JMSException
 	{
@@ -42,16 +47,25 @@ public class ApiToJmsBridge implements Api, ExceptionListener
 		producerForAsynchBounceString = session.createProducer(destination);
 		producerForAsynchBounceString.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
+		destinationForAsynchBounceString = session.createTemporaryQueue();
+		consumerForAsynchBounceStringResponses = session.createConsumer(destinationForAsynchBounceString);
+		consumerForAsynchBounceStringResponses.setMessageListener(this);
+
 	}
+
+	private Consumer<String> tmpCallback;
 
 	@Override
 	public void asynchBounceString(@NotNull String msg, Consumer<String> callback)
 	{
+		tmpCallback = callback;
 		logger.debug("Asych Bounce, putting message on queue");
 		TextMessage message;
 		try
 		{
-			message = session.createTextMessage("Hello world!");
+			message = session.createTextMessage(msg);
+			message.setJMSReplyTo(destinationForAsynchBounceString);
+			message.setJMSCorrelationID("ID");
 		}
 		catch (JMSException e)
 		{
@@ -90,5 +104,23 @@ public class ApiToJmsBridge implements Api, ExceptionListener
 	public void onException(JMSException e)
 	{
 		logger.error("OnException: ", e);
+	}
+
+	@Override
+	public void onMessage(Message message)
+	{
+		logger.debug("Got message: {}", message);
+		if(message instanceof TextMessage)
+		{
+			final TextMessage text = (TextMessage) message;
+			try
+			{
+				logger.debug("contents are: {}", text.getText());
+				tmpCallback.accept(text.getText());
+			} catch (JMSException e)
+			{
+				logger.error("Got exception: ", e);
+			}
+		}
 	}
 }
