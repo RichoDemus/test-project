@@ -12,5 +12,7 @@ public class Client
                 .map(String::toUpperCase)
                 .filter(s -> !s.startsWith("W"))
                 .subscribe(s -> System.out.println("Got message : " + s));
+
+        api.getSequence().subscribe(s -> System.out.println("Got sequence: " + s));
     }
 }

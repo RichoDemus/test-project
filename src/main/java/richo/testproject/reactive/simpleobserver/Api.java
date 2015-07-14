@@ -5,4 +5,5 @@ import rx.Observable;
 public interface Api
 {
     Observable<String> getSentence();
+    Observable<Long> getSequence();
 }
