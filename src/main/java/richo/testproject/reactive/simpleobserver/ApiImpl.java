@@ -2,12 +2,11 @@ package richo.testproject.reactive.simpleobserver;
 
 import rx.Observable;
 
+import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ApiImpl implements Api
 {
-    private final AtomicLong counter = new AtomicLong();
-
     @Override
     public Observable<String> getSentence(String... words)
     {
@@ -17,18 +16,30 @@ public class ApiImpl implements Api
     @Override
     public Observable<Long> getSequence()
     {
-        return Observable.<Long>create(s ->
-        {
-            while (true)
-            {
-                s.onNext(counter.getAndIncrement());
+        return Observable.from(new CounterIterable());
+    }
 
-                if (s.isUnsubscribed())
+    private static class CounterIterable implements Iterable<Long>
+    {
+        private final AtomicLong counter = new AtomicLong();
+
+        @Override
+        public Iterator<Long> iterator()
+        {
+            return new Iterator<Long>()
+            {
+                @Override
+                public boolean hasNext()
                 {
-                    s.onCompleted();
-                    break;
+                    return true;
                 }
-            }
-        });
+
+                @Override
+                public Long next()
+                {
+                    return counter.getAndIncrement();
+                }
+            };
+        }
     }
 }
