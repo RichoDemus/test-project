@@ -4,6 +4,6 @@ import rx.Observable;
 
 public interface Api
 {
-    Observable<String> getSentence();
+    Observable<String> getSentence(String... words);
     Observable<Long> getSequence();
 }
