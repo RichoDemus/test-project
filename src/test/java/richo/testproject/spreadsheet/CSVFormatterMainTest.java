@@ -1,6 +1,7 @@
 package richo.testproject.spreadsheet;
 
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class CSVFormatterMainTest
 {
+	@Ignore
 	@Test
 	public void testParse() throws Exception
 	{
